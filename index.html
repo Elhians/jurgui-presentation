@@ -177,6 +177,50 @@
             height: 4px;
             background: linear-gradient(to right, #38A169, #3182CE);
         }
+
+        /* Animations d'entrée */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .initial-animation {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .visible {
+            opacity: 1;
+            transform: translate(0);
+        }
     </style>
     <script>
         tailwind.config = {
@@ -399,8 +443,46 @@
     </footer>
 
     <script>
+        // Animation initiale
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('#hero');
+            header.classList.add('initial-animation');
+        });
+
+        // Observer pour les animations au scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        // Ajouter les classes d'animation aux éléments
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animer les cartes de fonctionnalités
+            document.querySelectorAll('.feature-card').forEach((card, index) => {
+                card.classList.add('fade-in-up');
+                observer.observe(card);
+            });
+
+            // Animer les cartes d'avantages
+            document.querySelectorAll('.benefit-card').forEach((card, index) => {
+                card.classList.add('slide-in-left');
+                observer.observe(card);
+            });
+
+            // Animer les éléments de la section technologie
+            document.querySelectorAll('.tech-list-item').forEach((item, index) => {
+                item.classList.add('fade-in-up');
+                observer.observe(item);
+            });
+        });
+
+        // Année courante dans le footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
-
 </body>
 </html>
