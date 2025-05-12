@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JurguiTech - Gestion Intelligente de Poulaillers Connectés</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/heroicons/2.1.1/24/outline/heroicons.min.css" rel="stylesheet">
+    <style>
+        /* Ajouts CSS personnalisés si nécessaire */
+        html { 
+            scroll-behavior: smooth; 
+        }
+        
+        /* Enhanced hero background with better gradient */
+        .hero-bg {
+            background-image: linear-gradient(135deg, rgba(35, 118, 86, 0.8) 0%, rgba(0, 0, 0, 0.4) 100%), url('coop-face-view-removebg-preview.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* Improved section titles with modern typography */
+        .section-title {
+            font-size: 2.25rem;
+            line-height: 1.2;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #1a202c;
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: #38A169;
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            line-height: 1.75;
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 4rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Enhanced feature cards with better hover effects */
+        .feature-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #38A169;
+        }
+
+        .icon-placeholder {
+            width: 3.5rem;
+            height: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: #38A169;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .icon-placeholder {
+            transform: scale(1.1);
+        }
+
+        /* Custom button styles */
+        .btn-primary {
+            background-color: #38A169;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary:hover {
+            background-color: #2F855A;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom navigation styles */
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #38A169;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Benefits section enhancement */
+        .benefit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: #38A169;
+        }
+
+        /* Technology section enhancement */
+        .tech-list-item {
+            display: flex;
+            align-items: start;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .tech-list-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(10px);
+        }
+
+        /* Footer enhancement */
+        .footer-content {
+            background: linear-gradient(to right, #314a2c, #2d3748);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #38A169, #3182CE);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                primary: '#38A169', // Vert (modifiable)
+                secondary: '#3182CE', // Bleu (modifiable)
+                accent: '#DD6B20', // Orange/Accent (modifiable)
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+
+    <nav x-data="{ isOpen: false }" class="bg-white shadow-md fixed w-full z-50 top-0">
+        <div class="container mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
+            <div class="flex items-center justify-between">
+                <div>
+                    <a class="text-2xl font-bold text-primary hover:text-primary-dark" href="#">JurguiTech</a>
+                </div>
+                <div class="flex md:hidden">
+                    <button @click="isOpen = !isOpen" type="button" class="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600" aria-label="toggle menu">
+                        <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
+                            <path x-show="!isOpen" fill-rule="evenodd" clip-rule="evenodd" d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"></path>
+                            <path x-show="isOpen" fill-rule="evenodd" clip-rule="evenodd" d="M4.293 6.293a1 1 0 011.414-1.414L12 10.586l6.293-6.293a1 1 0 111.414 1.414L13.414 12l6.293 6.293a1 1 0 01-1.414 1.414L12 13.414l-6.293 6.293a1 1 0 01-1.414-1.414L10.586 12 4.293 6.293z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div :class="{'block': isOpen, 'hidden': !isOpen}" class="md:flex items-center">
+                <div class="flex flex-col md:flex-row md:mx-6">
+                    <a class="my-1 text-sm text-gray-700 font-medium hover:text-primary md:mx-4 md:my-0" href="#hero">Accueil</a>
+                    <a class="my-1 text-sm text-gray-700 font-medium hover:text-primary md:mx-4 md:my-0" href="#features">Fonctionnalités</a>
+                    <a class="my-1 text-sm text-gray-700 font-medium hover:text-primary md:mx-4 md:my-0" href="#technology">Technologie</a>
+                    <a class="my-1 text-sm text-gray-700 font-medium hover:text-primary md:mx-4 md:my-0" href="#benefits">Avantages</a>
+                    <a class="my-1 text-sm text-gray-700 font-medium hover:text-primary md:mx-4 md:my-0" href="#contact">Contact</a>
+                </div>
+                <a href="#contact" class="bg-accent hover:bg-accent-dark text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 hidden md:block">
+                    Nous contacter
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="hero" class="hero-bg text-white pt-32 pb-16 md:pt-48 md:pb-24">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">
+                JurguiTech: L'Intelligence au Service de Votre Élevage.
+            </h1>
+            <p class="text-lg md:text-2xl mb-8 text-gray-200">
+                JurguTech est une solution intelligente de gestion de poulaillers qui vous permet de nourrir, surveiller et protéger vos poules à distance, sans être un expert en technologie, tout en réduisant l’effort quotidien.
+            </p>
+            <a href="#features" class="bg-primary hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300 ease-in-out transform hover:scale-105">
+                Découvrir le Système
+            </a>
+        </div>
+    </header>
+
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title">Modernisez Votre Gestion Avicole</h2>
+            <p class="section-subtitle">
+                JurguiTech transforme les défis de l'élevage traditionnel en opportunités grâce à la technologie,
+                offrant contrôle, efficacité et tranquillité d'esprit.
+            </p>
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full md:w-1/2 px-4 mb-8 md:mb-0">
+                    <img src="img/coop-big-view.png" alt="Concept JurguiTech" class="rounded-lg shadow-xl">
+                </div>
+                <div class="w-full md:w-1/2 px-4 flex flex-col justify-center">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">La solution connectée pour des éleveurs performants</h3>
+                    <p class="text-gray-600 mb-4">
+                        Notre système IoT intègre des capteurs intelligents, une connectivité fiable et une application web intuitive pour vous donner une vue d'ensemble et un contrôle précis sur votre poulailler, où que vous soyez.
+                    </p>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Optimisation des ressources (eau, aliments).</li>
+                        <li>Amélioration du bien-être animal.</li>
+                        <li>Réduction des risques et anticipation des problèmes.</li>
+                        <li>Gain de temps significatif pour les éleveurs.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-16">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title">Fonctionnalités Révolutionnaires</h2>
+            <p class="section-subtitle">Tout ce dont vous avez besoin pour une gestion avicole de pointe.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="feature-card">
+                    <svg class="icon-placeholder" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.07 0a5 5 0 010 7.07M9 12l2 2 4-4m5.636-6.364A13.962 13.962 0 0012 3C6.486 3 2 7.486 2 13s4.486 10 10 10c1.115 0 2.19-.134 3.214-.38"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2">Suivi en Temps Réel</h3>
+                    <p class="text-gray-600">Température, humidité, niveaux d'eau et d'aliments, qualité de l'air, caméras... tout sous contrôle instantanément.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="icon-placeholder" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 16v-2m8-6h2M4 12H2m15.364 6.364l-1.414-1.414M6.05 6.05l-1.414-1.414m12.728 0l-1.414 1.414M6.05 17.95l-1.414 1.414M12 18a6 6 0 100-12 6 6 0 000 12z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2">Automatisation Intelligente</h3>
+                    <p class="text-gray-600">Distribution d'aliments, ventilation, éclairage, et nettoyage programmables ou déclenchés par seuils.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="icon-placeholder" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2">Alertes Proactives</h3>
+                    <p class="text-gray-600">Notifications instantanées sur votre mobile ou email en cas de panne, de seuils critiques dépassés ou d'événements anormaux.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="icon-placeholder" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2">Tableau de Bord Intuitif</h3>
+                    <p class="text-gray-600">Accédez à toutes vos données et commandes via une interface web claire, accessible sur tous vos appareils.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="icon-placeholder" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2">Données & Analyses</h3>
+                    <p class="text-gray-600">Historiques, graphiques et rapports pour comprendre les tendances et optimiser vos performances d'élevage.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="icon-placeholder" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2">Gestion Collaborative</h3>
+                    <p class="text-gray-600">Définissez des rôles (Admin, Employé, Invité) pour partager l'accès et les informations avec votre équipe et partenaires.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="technology" class="py-16 bg-gray-800 text-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-white">Une Technologie de Pointe, Simplifiée</h2>
+            <p class="section-subtitle text-gray-300">Notre architecture robuste et moderne garantit fiabilité et évolutivité.</p>
+            <div class="flex flex-wrap items-center -mx-4">
+                <div class="w-full md:w-1/2 px-4 mb-8 md:mb-0">
+                    <img src="img/coop-large-view-removebg-preview.png" alt= "Schéma Technologie JurguiTech" class="rounded-lg shadow-xl">
+                </div>
+                <div class="w-full md:w-1/2 px-4">
+                    <p class="mb-6 text-gray-200">
+                        JurguiTech s'appuie sur une stack technologique éprouvée pour collecter les données, les traiter et vous les présenter de manière actionnable :
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="tech-list-item">
+                            <svg class="w-6 h-6 text-primary mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><strong class="font-semibold">Capteurs & Microcontrôleurs (ESP32) :</strong> Collecte précise des données environnementales et contrôle des actionneurs.</span>
+                        </li>
+                        <li class="tech-list-item">
+                             <svg class="w-6 h-6 text-primary mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><strong class="font-semibold">Connectivité (MQTT/WebSocket) :</strong> Communication temps réel fiable entre les poulaillers et le cloud.</span>
+                        </li>
+                        <li class="tech-list-item">
+                             <svg class="w-6 h-6 text-primary mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><strong class="font-semibold">Backend Sécurisé (NestJS & MongoDB) :</strong> Traitement, stockage et sécurisation des données sur une infrastructure cloud.</span>
+                        </li>
+                         <li class="tech-list-item">
+                             <svg class="w-6 h-6 text-primary mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><strong class="font-semibold">Application Web Moderne (Angular) :</strong> Interface utilisateur réactive et conviviale pour la visualisation et le contrôle.</span>
+                        </li>
+                    </ul>
+                     <p class="mt-6 text-gray-300">
+                        Et nous préparons déjà l'avenir avec l'intégration de modules d'IA pour le diagnostic précoce et l'analyse comportementale.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="benefits" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title">Les Avantages JurguiTech Pour Vous</h2>
+            <p class="section-subtitle">Conçu pour les éleveurs, techniciens et partenaires agricoles exigeants.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="benefit-card">
+                    <h3 class="text-xl font-semibold text-primary mb-2">Gain de Temps & Productivité</h3>
+                    <p class="text-gray-600">Automatisez les tâches répétitives et concentrez-vous sur ce qui compte vraiment.</p>
+                </div>
+                <div class="benefit-card">
+                    <h3 class="text-xl font-semibold text-primary mb-2">Bien-être Animal Optimisé</h3>
+                    <p class="text-gray-600">Maintenez des conditions idéales pour vos volailles en continu.</p>
+                </div>
+                <div class="benefit-card">
+                    <h3 class="text-xl font-semibold text-primary mb-2">Réduction des Pertes</h3>
+                    <p class="text-gray-600">Détectez rapidement les problèmes et intervenez avant qu'ils ne s'aggravent.</p>
+                </div>
+                <div class="benefit-card">
+                    <h3 class="text-xl font-semibold text-primary mb-2">Contrôle à Distance Total</h3>
+                    <p class="text-gray-600">Gérez votre exploitation où que vous soyez, quand vous le voulez.</p>
+                </div>
+                <div class="benefit-card">
+                    <h3 class="text-xl font-semibold text-primary mb-2">Décisions Éclairées</h3>
+                    <p class="text-gray-600">Utilisez les données collectées pour améliorer vos pratiques et votre rentabilité.</p>
+                </div>
+                <div class="benefit-card">
+                    <h3 class="text-xl font-semibold text-primary mb-2">Solution Évolutive</h3>
+                    <p class="text-gray-600">Un système conçu pour grandir avec vos besoins et intégrer les innovations futures.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20 bg-primary text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-6">Prêt à Révolutionner Votre Élevage ?</h2>
+            <p class="text-lg mb-8 text-gray-200">
+                Contactez-nous dès aujourd'hui pour une démonstration personnalisée ou pour discuter de vos besoins spécifiques.
+                L'avenir de l'aviculture commence avec JurguiTech.
+            </p>
+            <a href="mailto:contact@jurguitech.com?subject=Demande de démo JurguiTech" class="bg-white hover:bg-gray-100 text-primary font-bold py-3 px-8 rounded-lg text-lg transition duration-300 ease-in-out transform hover:scale-105 mr-4">
+                Nous Contacter
+            </a>
+            <p class="mt-8 text-sm text-gray-300">Ou appelez-nous au : +XX XXX XXX XXX (à remplacer)</p>
+
+            </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; <span id="currentYear"></span> JurguiTech. Tous droits réservés.</p>
+            <p class="text-sm">Conçu avec passion pour l'innovation agricole.</p>
+            </div>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>
